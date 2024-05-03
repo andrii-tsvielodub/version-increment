@@ -59,6 +59,9 @@ else                                                           # the 'pre-releas
     git_commit_sha="$(git rev-parse --short HEAD)"             # labels
 fi
 
+# calculate md5 hash of the current branch name
+git_branch_hash="$(echo "${current_ref}" | md5sum | cut -d ' ' -f 1)"
+
 ##==----------------------------------------------------------------------------
 ##  Conventional commits
 if [[ "${scheme}" == 'conventional_commits' ]] ; then
@@ -119,7 +122,7 @@ fi
 
 # add pre-release info to version if not the default branch
 if [[ "${current_ref}" != "refs/heads/${default_branch}" ]] ; then
-    pre_release="pre.${git_commit}"
+    pre_release="pre.t$(date '+%Y%m%d%H%M').c${git_commit}.b${git_branch_hash:(-8)}"
     if [[ "${pep440:-}" == 'true' ]] ; then
         new_version="${new_version}+${pre_release}"
     else

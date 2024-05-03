@@ -40,6 +40,11 @@ inputs:
     description: 'Use the GitHub API to discover current tags, which avoids the need for a git checkout, but requires `curl` and `jq`'
     required: false
     default: false
+  version_file:
+    description: 'Path to a file containing the current version number, which will be used instead of git tags. Mutually exclusive with `use_api`.'
+    required: false
+    default: ''
+    type: string
 
 outputs:
   current-version:
@@ -86,6 +91,7 @@ runs:
         github_token: ${{ github.token }}
         scheme: ${{ inputs.scheme }}
         use_api: ${{ inputs.use_api }}
+        version_file: ${{ inputs.version_file }}
 
     - id: version-increment
       run: "${GITHUB_ACTION_PATH}/version-increment.sh"

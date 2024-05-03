@@ -34,6 +34,9 @@ if [[ "${use_api:-}" == 'true' ]] ; then
         | jq -r '.[].ref' | sed 's|refs/tags/||g' \
         | { grep_p "${pcre_allow_vprefix}" || true; } | sed 's/^v//g' | sort -V | tail -n 1
     )"
+# get current version from file
+elif [[ -n "${version_file:-}" ]] ; then
+    current_version="$(cat "${version_file}")"
 else
     current_version="$(
         git tag -l \
